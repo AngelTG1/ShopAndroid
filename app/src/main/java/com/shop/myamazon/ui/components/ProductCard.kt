@@ -41,7 +41,7 @@ fun ProductCard(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable { onViewDetail(product) }, // ✅ AGREGADO: Click en toda la card para ir al detalle
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = RoundedCornerShape(16.dp)
     ) {

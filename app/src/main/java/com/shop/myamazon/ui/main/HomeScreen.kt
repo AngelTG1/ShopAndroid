@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shop.myamazon.R
 import com.shop.myamazon.ui.auth.AuthViewModel
-import com.shop.myamazon.ui.components.ProductCard
+import com.shop.myamazon.ui.components.CardPreview
 import com.shop.myamazon.ui.components.UserHeader
 import com.shop.myamazon.ui.products.ProductViewModel
 import com.shop.myamazon.ui.cart.CartViewModel
@@ -133,14 +133,7 @@ fun HomeScreen(
             )
 
             // ✅ Campo de búsqueda
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 5.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
+
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
@@ -152,6 +145,7 @@ fun HomeScreen(
                             text = "Buscar productos...",
                             color = Color(0xFF9CA3AF)
                         )
+
                     },
                     leadingIcon = {
                         Icon(
@@ -186,7 +180,7 @@ fun HomeScreen(
                     shape = RoundedCornerShape(8.dp),
                     singleLine = true
                 )
-            }
+
 
             // ✅ Indicador de búsqueda activa
             if (isSearching && searchQuery.isNotEmpty()) {
@@ -230,7 +224,7 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 9.dp)
             ) {
                 // Estado de carga
                 when {
@@ -339,7 +333,7 @@ fun HomeScreen(
                         // Grid de productos
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(1),
-                            contentPadding = PaddingValues(bottom = 80.dp),
+                            contentPadding = PaddingValues(bottom = 70.dp, top = 12.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
@@ -349,9 +343,11 @@ fun HomeScreen(
                                 val isInCart = cartItem != null
                                 val cartQuantity = cartItem?.quantity ?: 0
 
-                                ProductCard(
+                                // En la sección donde llamas a CardPreview, cambia esta línea:
+
+                                CardPreview(
                                     product = product,
-                                    isAddingToCart = addingProductIds.contains(product.id) || cartUiState.actionInProgress,
+                                    isAddingToCart = addingProductIds.contains(product.id), // ✅ Solo este producto específico
                                     isInCart = isInCart,
                                     cartQuantity = cartQuantity,
                                     onAddToCart = { selectedProduct ->
@@ -462,7 +458,7 @@ private fun HomeScreenPreview(
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
-                    text = "Mi Amazon",
+                    text = "Mi Amazons",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFFE53E3E)
@@ -470,14 +466,7 @@ private fun HomeScreenPreview(
             }
 
             // Campo de búsqueda
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
+
                 OutlinedTextField(
                     value = searchText,
                     onValueChange = { searchText = it },
@@ -518,7 +507,7 @@ private fun HomeScreenPreview(
                     shape = RoundedCornerShape(8.dp),
                     singleLine = true
                 )
-            }
+
 
             // Indicador de búsqueda
             if (isSearching && searchText.isNotEmpty()) {
@@ -552,7 +541,7 @@ private fun HomeScreenPreview(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 8.dp)
             ) {
                 when {
                     isLoading -> {
@@ -598,6 +587,7 @@ private fun HomeScreenPreview(
                                 ) {
                                     Text("Reintentar")
                                 }
+                                Spacer(modifier = Modifier.height(19.dp))
                             }
                         }
                     }
@@ -618,15 +608,20 @@ private fun HomeScreenPreview(
                         }
                     }
 
+
+
                     else -> {
                         // Lista de productos de muestra
                         LazyVerticalGrid(
+
                             columns = GridCells.Fixed(1),
-                            contentPadding = PaddingValues(bottom = 80.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            contentPadding = PaddingValues(bottom = 80.dp, top = 10.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+
                         ) {
+
                             items(getSampleProducts()) { product ->
-                                ProductCard(
+                                CardPreview(
                                     product = product,
                                     onAddToCart = { },
                                     onViewCart = { },
@@ -652,7 +647,7 @@ private fun getSampleProducts() = listOf(
         price = 1299.99,
         stockQuantity = 15,
         category = "Electrónicos",
-        images = listOf("https://example.com/iphone.jpg"),
+        images = listOf("https://ik.imagekit.io/ziosam2gq/iphone686_FZ.jpg?updatedAt=1752361004586.jpg"),
         status = "active",
         viewsCount = 234
     ),
