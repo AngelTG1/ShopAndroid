@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import com.shop.myamazon.ui.components.CardPreview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -508,7 +509,8 @@ private fun ProductDescription(product: Product) {
 @Composable
 private fun ProductRelatedSection(
     relatedProducts: List<Product>,
-    onNavigateToProduct: (String) -> Unit
+    onNavigateToProduct: (String) -> Unit,
+
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -524,18 +526,19 @@ private fun ProductRelatedSection(
                 color = Color(0xFF2D3748)
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(1.dp),
                 contentPadding = PaddingValues(horizontal = 4.dp)
             ) {
                 items(relatedProducts) { product ->
-                    ProductCard(
+                    CardPreview(
                         product = product,
-                        modifier = Modifier.width(200.dp),
-                        onAddToCart = { /* TODO */ },
-                        onViewCart = { /* TODO */ }
+                        modifier = Modifier.fillMaxWidth(),
+                        onViewDetail = { selectedProduct ->
+                            onNavigateToProduct(selectedProduct.uuid)
+                        }
                     )
                 }
             }

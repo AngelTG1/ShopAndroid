@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,14 +24,12 @@ import com.shop.myamazon.ui.main.HomeScreen
 import com.shop.myamazon.ui.notifications.NotificationsScreen
 import com.shop.myamazon.ui.profile.ProfileScreen
 import com.shop.myamazon.ui.products.ProductViewModel
-import androidx.compose.ui.res.painterResource
 
-
-// ✅ Sealed class para las pantallas del bottom navigation con tus iconos
+// ✅ Sealed class para las pantallas del bottom navigation
 sealed class BottomNavScreen(
     val route: String,
     val title: String,
-    val icon: Int // ✅ Cambiar a Int para usar tus iconos de res/drawable
+    val icon: Int
 ) {
     object Home : BottomNavScreen("bottom_home", "Inicio", R.drawable.solar_home)
     object Notifications : BottomNavScreen("bottom_notifications", "Notificaciones", R.drawable.solar_bell)
@@ -47,6 +44,7 @@ fun MainScreenWithBottomNav(
     onNavigateToAddProduct: () -> Unit = {},
     onNavigateToMyProducts: () -> Unit = {},
     onNavigateToProductDetail: (String) -> Unit = {},
+    onNavigateToSubscription: () -> Unit = {}, // ✅ AGREGADO: Parámetro para navegar a suscripciones
     authViewModel: AuthViewModel = viewModel(),
     cartViewModel: CartViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel()
@@ -67,7 +65,7 @@ fun MainScreenWithBottomNav(
             BottomNavigationBar(
                 items = bottomNavItems,
                 selectedTab = selectedTab,
-                cartCount = cartUiState.cartCount, // ✅ Badge en el carrito
+                cartCount = cartUiState.cartCount,
                 onTabSelected = { selectedTab = it }
             )
         },
@@ -83,10 +81,11 @@ fun MainScreenWithBottomNav(
                 0 -> { // Home
                     HomeScreen(
                         onLogout = onLogout,
-                        onNavigateToProfile = { selectedTab = 3 }, // Cambiar a pestaña Profile
+                        onNavigateToProfile = { selectedTab = 3 },
                         onNavigateToAddProduct = onNavigateToAddProduct,
-                        onNavigateToCart = { selectedTab = 2 }, // Cambiar a pestaña Cart
+                        onNavigateToCart = { selectedTab = 2 },
                         onNavigateToProductDetail = onNavigateToProductDetail,
+                        onNavigateToSubscription = onNavigateToSubscription, // ✅ PASADO: Navegación a suscripciones
                         authViewModel = authViewModel,
                         productViewModel = productViewModel,
                         cartViewModel = cartViewModel
@@ -99,7 +98,7 @@ fun MainScreenWithBottomNav(
                 }
                 2 -> { // Carrito
                     CartScreen(
-                        onBack = { selectedTab = 0 }, // Volver a Home
+                        onBack = { selectedTab = 0 },
                         onCheckout = {
                             // TODO: Implementar checkout
                         },
@@ -108,7 +107,7 @@ fun MainScreenWithBottomNav(
                 }
                 3 -> { // Perfil
                     ProfileScreen(
-                        onBack = { selectedTab = 0 }, // Volver a Home
+                        onBack = { selectedTab = 0 },
                         onLogout = onLogout,
                         onNavigateToMyProducts = onNavigateToMyProducts,
                         viewModel = authViewModel
@@ -126,52 +125,62 @@ private fun BottomNavigationBar(
     cartCount: Int,
     onTabSelected: (Int) -> Unit
 ) {
-    NavigationBar(
-        containerColor = colorResource(R.color.white),
-        contentColor = Color.White,
-        modifier = Modifier.height(70.dp)
+    // Envolvemos la NavigationBar en un Box para personalizar la altura
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(99.dp) // <- puedes cambiar esto a 88.dp o 72.dp si quieres ajustar
     ) {
-        items.forEachIndexed { index, item ->
-            NavigationBarItem(
-                selected = selectedTab == index,
-                onClick = { onTabSelected(index) },
-                icon = {
-                    Box {
-                        // ✅ Cambiar a painterResource para usar tus iconos
-                        Icon(
-                            painter = painterResource(id = item.icon),
-                            contentDescription = item.title,
-                            modifier = Modifier.size(28.dp),
-                            // ✅ OPCIÓN 1: Cambiar color directamente en el Icon
-                            tint = if (selectedTab == index) {
-                                colorResource(R.color.red_700)
-                            } else {
-                                Color.Gray    // ✅ Color cuando no está seleccionado
-                            }
-                        )
+        NavigationBar(
+            containerColor = colorResource(R.color.white),
+            contentColor = Color.White,
+            tonalElevation = 4.dp,
+             // Asegura que use todo el espacio del Box
+        ) {
+            items.forEachIndexed { index, item ->
+                NavigationBarItem(
+                    selected = selectedTab == index,
+                    onClick = { onTabSelected(index) },
+                    modifier = Modifier.padding(2.dp),
+                    icon = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight(), // Asegura el centrado vertical
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = item.icon),
+                                contentDescription = item.title,
+                                modifier = Modifier.size(27.dp), // Icono un poco más grande
+                                tint = if (selectedTab == index) {
+                                    colorResource(R.color.red_700)
+                                } else {
+                                    Color.Gray
+                                }
+                            )
 
-                        if (item == BottomNavScreen.Cart && cartCount > 0) {
-                            Badge(
-                                modifier = Modifier.offset(x = 14.dp, y = (-14).dp),
-                                containerColor = Color.Black
-                            ) {
-                                Text(
-                                    text = if (cartCount > 99) "99+" else cartCount.toString(),
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
+                            if (item == BottomNavScreen.Cart && cartCount > 0) {
+                                Badge(
+                                    modifier = Modifier.offset(x = 14.dp, y = (-14).dp),
+                                    containerColor = Color.Black
+                                ) {
+                                    Text(
+                                        text = if (cartCount > 99) "99+" else cartCount.toString(),
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
                             }
                         }
-                    }
-                },
-                label = null,
-                // ✅ OPCIÓN 2: Cambiar colores usando NavigationBarItemDefaults
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Red,        // ✅ Ícono cuando seleccionado
-                    unselectedIconColor = Color.Blue,     // ✅ Ícono cuando no seleccionado
-                    indicatorColor = Color.White.copy(alpha = 0.2f)
+                    },
+                    label = null, // Puedes poner un Text aquí si quieres etiquetas
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = colorResource(R.color.red_700),
+                        unselectedIconColor = Color.Gray,
+                        indicatorColor = Color.White.copy(alpha = 0.2f)
+                    )
                 )
-            )
+            }
         }
     }
 }
@@ -190,19 +199,17 @@ private fun CustomNavItem(
         contentAlignment = Alignment.Center
     ) {
         Box {
-            // ✅ Usar Icon con painterResource para iconos personalizados
             Icon(
                 painter = painterResource(id = item.icon),
                 contentDescription = item.title,
                 modifier = Modifier.size(24.dp),
                 tint = if (isSelected) {
-                    Color(0xFF2E2E2E) // ✅ Negro cuando seleccionado
+                    Color(0xFF2E2E2E)
                 } else {
-                    Color(0xFF9E9E9E) // ✅ Gris cuando no seleccionado
+                    Color(0xFF9E9E9E)
                 }
             )
 
-            // ✅ Badge para el carrito si hay items
             if (item == BottomNavScreen.Cart && cartCount > 0) {
                 Box(
                     modifier = Modifier
@@ -226,7 +233,6 @@ private fun CustomNavItem(
     }
 }
 
-// ✅ PREVIEW con iconos por defecto (fallback)
 @Preview(showBackground = true)
 @Composable
 fun CustomBottomNavPreview() {
@@ -242,114 +248,13 @@ fun CustomBottomNavPreview() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
             .background(Color(0xFFF5F5F5))
     ) {
-        CustomBottomNavigationBar(
+        BottomNavigationBar(
             items = bottomNavItems,
             selectedTab = selectedTab,
-            cartCount = 3, // Con badge para probar
-            onTabSelected = {
-                val it = 0
-                selectedTab = it
-            },
-            modifier = Modifier.align(Alignment.BottomCenter)
+            cartCount = 3,
+            onTabSelected = { selectedTab = it }
         )
     }
-}
-
-// ✅ PREVIEW con diferentes estados
-@Preview(showBackground = true)
-@Composable
-fun CustomBottomNavStatesPreview() {
-    Column {
-        // Estado 1: Home seleccionado
-        var selectedTab1 by remember { mutableStateOf(0) }
-        CustomBottomNavigationBar(
-            items = listOf(
-                BottomNavScreen.Home,
-                BottomNavScreen.Notifications,
-                BottomNavScreen.Cart,
-                BottomNavScreen.Profile
-            ),
-            selectedTab = selectedTab1,
-            cartCount = 0,
-            onTabSelected = {
-                val it = 0
-                selectedTab1 = it
-            },
-            modifier = Modifier.align(Alignment.BottomCenter as Alignment.Horizontal)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Estado 2: Notificaciones seleccionado
-        var selectedTab2 by remember { mutableStateOf(1) }
-        CustomBottomNavigationBar(
-            items = listOf(
-                BottomNavScreen.Home,
-                BottomNavScreen.Notifications,
-                BottomNavScreen.Cart,
-                BottomNavScreen.Profile
-            ),
-            selectedTab = selectedTab2,
-            cartCount = 0,
-            onTabSelected = {
-                val it = 0
-                selectedTab2 = it
-            },
-            modifier = Modifier.align(Alignment.BottomCenter as Alignment.Horizontal)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Estado 3: Cart seleccionado con badge
-        var selectedTab3 by remember { mutableIntStateOf(2) }
-        CustomBottomNavigationBar(
-            items = listOf(
-                BottomNavScreen.Home,
-                BottomNavScreen.Notifications,
-                BottomNavScreen.Cart,
-                BottomNavScreen.Profile
-            ),
-            selectedTab = selectedTab3,
-            cartCount = 5, // Con badge
-            onTabSelected = {
-                val it = 0
-                selectedTab3 = it
-            },
-            modifier = Modifier.align(Alignment.BottomCenter as Alignment.Horizontal)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Estado 4: Perfil seleccionado
-        var selectedTab4 by remember { mutableIntStateOf(3) }
-        CustomBottomNavigationBar(
-            items = listOf(
-                BottomNavScreen.Home,
-                BottomNavScreen.Notifications,
-                BottomNavScreen.Cart,
-                BottomNavScreen.Profile
-            ),
-            selectedTab = selectedTab4,
-            cartCount = 0,
-            onTabSelected = {
-                val it = 0
-                selectedTab4 = it
-            },
-            modifier = Modifier.align(Alignment.BottomCenter as Alignment.Horizontal)
-        )
-    }
-}
-
-@Composable
-fun CustomBottomNavigationBar(
-    items: List<BottomNavScreen>,
-    selectedTab: Int,
-    cartCount: Int,
-    onTabSelected: () -> Unit,
-    modifier: Modifier
-) {
-    TODO("Not yet implemented")
 }

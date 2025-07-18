@@ -16,6 +16,7 @@ import com.shop.myamazon.ui.products.ProductDetailScreen
 import com.shop.myamazon.ui.products.ProductDetailViewModel
 import com.shop.myamazon.ui.products.ProductViewModel
 import com.shop.myamazon.ui.cart.CartViewModel
+import com.shop.myamazon.ui.subscription.SubscriptionScreen // ✅ AGREGADO: Import para SubscriptionScreen
 
 @Composable
 fun AppNavigation() {
@@ -62,7 +63,7 @@ fun AppNavigation() {
             )
         }
 
-        // ✅ NUEVA: Pantalla principal con bottom navigation
+        // ✅ Pantalla principal con bottom navigation
         composable("main") {
             val productViewModel: ProductViewModel = viewModel()
 
@@ -81,6 +82,9 @@ fun AppNavigation() {
                 onNavigateToProductDetail = { productUuid ->
                     navController.navigate("product_detail/$productUuid")
                 },
+                onNavigateToSubscription = { // ✅ AGREGADO: Navegación a planes de suscripción
+                    navController.navigate("subscription")
+                },
                 authViewModel = authViewModel,
                 cartViewModel = cartViewModel,
                 productViewModel = productViewModel
@@ -98,11 +102,9 @@ fun AppNavigation() {
                     navController.popBackStack()
                 },
                 onNavigateToCart = {
-                    // ✅ Navegar a main y cambiar a pestaña de carrito
                     navController.navigate("main") {
                         popUpTo("product_detail/$productId") { inclusive = true }
                     }
-                    // TODO: Implementar cambio directo a pestaña carrito
                 },
                 onNavigateToProduct = { newProductId ->
                     navController.navigate("product_detail/$newProductId")
@@ -144,6 +146,15 @@ fun AppNavigation() {
                     navController.navigate("product_detail/${product.uuid}")
                 },
                 myProductsViewModel = myProductsViewModel
+            )
+        }
+
+        // ✅ AGREGADO: Pantalla de planes de suscripción
+        composable("subscription") {
+            SubscriptionScreen(
+                onBack = {
+                    navController.popBackStack() // Volver a la pantalla anterior
+                }
             )
         }
     }

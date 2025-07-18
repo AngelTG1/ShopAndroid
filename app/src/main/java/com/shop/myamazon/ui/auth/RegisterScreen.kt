@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -111,6 +112,7 @@ fun RegisterScreen(
             singleLine = true,
             enabled = !uiState.isLoading,
             shape = RoundedCornerShape(16.dp),
+            textStyle = TextStyle(color = colorResource(R.color.black)),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(R.color.red_700),    // Mismo color que el botón
                 unfocusedBorderColor = Color.Gray.copy(alpha = 0.5f),
@@ -140,6 +142,7 @@ fun RegisterScreen(
             singleLine = true,
             enabled = !uiState.isLoading,
             shape = RoundedCornerShape(16.dp),
+            textStyle = TextStyle(color = colorResource(R.color.black)),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(R.color.red_700),    // Mismo color que el botón
                 unfocusedBorderColor = Color.Gray.copy(alpha = 0.5f),
@@ -172,7 +175,8 @@ fun RegisterScreen(
                 .padding(vertical = 4.dp),
             singleLine = true,
             enabled = !uiState.isLoading,
-            shape = RoundedCornerShape(12.dp),  // ✅ Esquinas redondeadas como el botón
+            shape = RoundedCornerShape(12.dp),
+            textStyle = TextStyle(color = colorResource(R.color.black)),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(R.color.red_700),    // Mismo color que el botón
                 unfocusedBorderColor = Color.Gray.copy(alpha = 0.5f),
@@ -203,8 +207,9 @@ fun RegisterScreen(
             singleLine = true,
             enabled = !uiState.isLoading,
             shape = RoundedCornerShape(16.dp),
+            textStyle = TextStyle(color = colorResource(R.color.black)),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = colorResource(R.color.red_700),    // Mismo color que el botón
+                focusedBorderColor = colorResource(R.color.red_700),
                 unfocusedBorderColor = Color.Gray.copy(alpha = 0.5f),
                 focusedLabelColor = colorResource(R.color.red_700),
                 unfocusedLabelColor = Color.Gray,
@@ -244,6 +249,7 @@ fun RegisterScreen(
                 }
             },
             shape = RoundedCornerShape(12.dp),
+            textStyle = TextStyle(color = colorResource(R.color.black)),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(R.color.red_700),    // Mismo color que el botón
                 unfocusedBorderColor = Color.Gray.copy(alpha = 0.5f),
@@ -286,6 +292,7 @@ fun RegisterScreen(
                 }
             },
             shape = RoundedCornerShape(16.dp),
+            textStyle = TextStyle(color = colorResource(R.color.black)),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(R.color.red_700),
                 unfocusedBorderColor = Color.Gray.copy(alpha = 0.5f),

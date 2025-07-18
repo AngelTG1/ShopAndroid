@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shop.myamazon.R
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -74,6 +75,7 @@ fun LoginScreen(
             text = "Hello Again!",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
+            color = Color(0xFF2D3748),
             modifier = Modifier.padding(bottom = 18.dp)
         )
         Text(
@@ -105,6 +107,7 @@ fun LoginScreen(
             singleLine = true,
             enabled = !uiState.isLoading,
             shape = RoundedCornerShape(12.dp),  // ✅ Esquinas redondeadas como el botón
+            textStyle = TextStyle(color = colorResource(R.color.black)),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(R.color.red_700),    // Mismo color que el botón
                 unfocusedBorderColor = Color.Gray.copy(alpha = 0.5f),
@@ -145,8 +148,9 @@ fun LoginScreen(
                 }
             },
             shape = RoundedCornerShape(12.dp),
+            textStyle = TextStyle(color = colorResource(R.color.black)),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = colorResource(R.color.red_700),    // Mismo color que el botón
+                focusedBorderColor = colorResource(R.color.red_700),
                 unfocusedBorderColor = Color.Gray.copy(alpha = 0.5f),
                 focusedLabelColor = colorResource(R.color.red_700),
                 unfocusedLabelColor = Color.Gray,
@@ -241,7 +245,5 @@ fun LoginScreen(
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    MaterialTheme {
-        LoginScreen()
-    }
+    LoginScreen()
 }
