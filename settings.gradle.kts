@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MyAmazon"
+rootProject.name = "Shop"
 include(":app")

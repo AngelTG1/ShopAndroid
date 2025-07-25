@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.shop.myamazon"
+    namespace = "com.shop.shop"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.shop.myamazon"
+        applicationId = "com.shop.shop"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
